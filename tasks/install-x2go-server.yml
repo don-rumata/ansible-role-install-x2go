@@ -14,7 +14,8 @@
 - name: Install X2Go {{ x2go_component }} support printers 4 Linux
   when:
     - ansible_system == 'Linux'
-    - x2go_printer_support == true
+    # - x2go_printer_support == true
+    - x2go_printer_support
   become: yes
   package:
     name: "{{ item }}"
@@ -28,8 +29,10 @@
 - name: Disable automatic remote printer installation
   when:
     - ansible_system == 'Linux'
-    - x2go_printer_support == true
-    - x2go_printer_disable_automatic_remote_installation == true
+    # - x2go_printer_support == true
+    # - x2go_printer_disable_automatic_remote_installation == true
+    - x2go_printer_support
+    - x2go_printer_disable_automatic_remote_installation
   become: yes
   service:
     name: cups-browsed
@@ -39,8 +42,10 @@
 - name: Enable automatic remote printer installation
   when:
     - ansible_system == 'Linux'
-    - x2go_printer_support == true
-    - x2go_printer_disable_automatic_remote_installation == false
+    # - x2go_printer_support == true
+    # - x2go_printer_disable_automatic_remote_installation == false
+    - x2go_printer_support
+    - not x2go_printer_disable_automatic_remote_installation
   become: yes
   service:
     name: cups-browsed
@@ -50,7 +55,8 @@
 - name: Install X2Go {{ x2go_component }} and support mount windows shares 4 Linux
   when:
     - ansible_system == 'Linux'
-    - x2go_mount_cifs_support == true
+    # - x2go_mount_cifs_support == true
+    - x2go_mount_cifs_support
   become: yes
   package:
     name: "{{ item }}"

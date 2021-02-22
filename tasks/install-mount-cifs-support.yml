@@ -2,7 +2,8 @@
 - name: Install CIFS mount support 4 Linux
   when:
     - ansible_system == 'Linux'
-    - x2go_mount_cifs_support == true
+    # - x2go_mount_cifs_support == true
+    - x2go_mount_cifs_support
   become: yes
   package:
     name: "{{ item }}"
@@ -15,8 +16,10 @@
 - name: Config sudoers 4 allow execute mount.cifs from unprivileged users
   when:
     - ansible_system == 'Linux'
-    - x2go_mount_cifs_support == true
-    - x2go_mount_cifs_unprivileged_user == true
+    # - x2go_mount_cifs_support == true
+    # - x2go_mount_cifs_unprivileged_user == true
+    - x2go_mount_cifs_support
+    - x2go_mount_cifs_unprivileged_user
   become: yes
   template:
     src: 10-mount-cifs.j2

@@ -10,20 +10,23 @@
   when:
     - ansible_system == 'Linux'
     - x2go_component == 'server'
-    - x2go_install_display_manager == true
+    # - x2go_install_display_manager == true
+    - x2go_install_display_manager
 
 - import_tasks: install-window-manager.yml
   when:
     - ansible_system == 'Linux'
     - x2go_component == 'server'
-    - x2go_install_window_manager == true
+    # - x2go_install_window_manager == true
+    - x2go_install_window_manager
 
 - import_tasks: install-x2go-{{ x2go_component }}.yml
 
 - import_tasks: printer-support-over-{{ x2go_printer_support_backend }}.yml
   when:
     - x2go_component == 'client'
-    - x2go_printer_support == true
+    # - x2go_printer_support == true
+    - x2go_printer_support
 
 - import_tasks: install-mount-cifs-support.yml
   when:
