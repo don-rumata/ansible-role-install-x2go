@@ -1,0 +1,14 @@
+---
+# https://wiki.x2go.org/doku.php/wiki:advanced:x2gobroker:start
+# TODO. Почитать по-внимательнее, надо ли ставить все эти компоненты или они опциональны.
+- name: Install X2Go {{ x2go_component }} 4 Linux
+  when: ansible_system == 'Linux'
+  become: yes
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - x2gobroker-daemon
+    - x2gobroker-wsgi
+    - x2gobroker-authservice
+    - x2gobroker-agent

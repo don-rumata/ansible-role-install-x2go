@@ -1,0 +1,54 @@
+galaxy_info:
+  author: don Rumata
+  description: Install X2GO for Linux and Windows
+  company: localhost
+
+  license: Apache License, Version 2.0
+
+  min_ansible_version: 2.7
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - xenial
+        - bionic
+        - focal
+    - name: Debian
+      version:
+        - jessie
+        - stretch
+        - buster
+        - oldstable
+        - stable
+        - testing
+    # https://github.com/ansible/galaxy/issues/2072
+    - name: EL
+      versions:
+        - 7
+        - 8
+    - name: opensuse
+      vesrion:
+        - tumbleweed
+    - name: Windows
+      version:
+        - 2008x64
+        - 2008x86
+        - 2019
+
+  galaxy_tags:
+    - linux
+    - ubuntu
+    - debian
+    - suse
+    - opensuse
+    - centos
+    - windows
+    - windows7
+    - windows10
+    - msi
+    - deb
+    - rpm
+    - x2go
+    - remoteapp
+
+  dependencies: []

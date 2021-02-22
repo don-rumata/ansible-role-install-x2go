@@ -1,0 +1,122 @@
+---
+# https://wiki.x2go.org/doku.php/doc:installation:x2goserver
+- name: Install X2Go {{ x2go_component }} 4 Linux
+  when: ansible_system == 'Linux'
+  become: yes
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - x2goserver
+    - x2goserver-xsession
+
+# https://wiki.x2go.org/doku.php/doc:installation:printing
+- name: Install X2Go {{ x2go_component }} support printers 4 Linux
+  when:
+    - ansible_system == 'Linux'
+    - x2go_printer_support == true
+  become: yes
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - x2goserver-printing
+    - cups-x2go
+  notify:
+    - restart-cups
+
+- name: Disable automatic remote printer installation
+  when:
+    - ansible_system == 'Linux'
+    - x2go_printer_support == true
+    - x2go_printer_disable_automatic_remote_installation == true
+  become: yes
+  service:
+    name: cups-browsed
+    state: stopped
+    enabled: no
+
+- name: Enable automatic remote printer installation
+  when:
+    - ansible_system == 'Linux'
+    - x2go_printer_support == true
+    - x2go_printer_disable_automatic_remote_installation == false
+  become: yes
+  service:
+    name: cups-browsed
+    state: started
+    enabled: yes
+
+- name: Install X2Go {{ x2go_component }} and support mount windows shares 4 Linux
+  when:
+    - ansible_system == 'Linux'
+    - x2go_mount_cifs_support == true
+  become: yes
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - cifs-utils
+
+# TODO. Добавить про раскладку клавы. https://kuharbogdan.com/stati-po-1s/remoteapp-na-linux-dlya-1s-chast-2/
+# http://renbuar.blogspot.com/2019/09/astra-orel-212-1.html вот тут ещё мож чё интересного можно нарыть.
+
+- name: Start X2Go {{ x2go_component }} service 4 Linux
+  when: ansible_system == 'Linux'
+  become: yes
+  service:
+    name: x2goserver
+    state: started
+    enabled: yes
+
+# # https://launchpad.net/~x2go/+archive/ubuntu/stable?field.series_filter=bionic
+# sudo apt-get install x2gomatebindings # if you use MATE/mubuntu
+# sudo apt-get install x2golxdebindings # if you use LXDE/lubuntu
+- package_facts:
+
+# https://wiki.x2go.org/doku.php/wiki:advanced:desktopbindings
+# https://docs.ansible.com/ansible/latest/modules/package_facts_module.html#examples
+# https://www.reddit.com/r/ansible/comments/a31t6t/check_if_package_is_installed_with_package_facts/
+
+- name: Install x2gomatebindings 4 Debian\Ubuntu
+  when:
+    - ansible_os_family == 'Debian'
+    - ansible_pkg_mgr == 'apt'
+    # - "'mate-desktop-environment' in ansible_facts.packages"
+    - "mate_package_for_check in ansible_facts.packages"
+  vars:
+    # mate_package_for_check: mate-desktop-common
+    mate_package_for_check: mate-desktop-environment
+  become: yes
+  apt:
+    name:
+      - x2gomatebindings
+    state: present
+    install_recommends: yes
+
+- name: Install x2golxdebindings 4 Debian\Ubuntu
+  when:
+    - ansible_os_family == 'Debian'
+    - ansible_pkg_mgr == 'apt'
+    # - "'lxde-core' in ansible_facts.packages"
+    - "lxde_package_for_check in ansible_facts.packages"
+  vars:
+    lxde_package_for_check: lxde-core
+  become: yes
+  apt:
+    name:
+      - x2golxdebindings
+    state: present
+    install_recommends: yes
+
+- name: Install lightdm-remote-session-x2go 4 Debian\Ubuntu
+  when:
+    - ansible_os_family == 'Debian'
+    - ansible_pkg_mgr == 'apt'
+    - "'lightdm' in ansible_facts.packages"
+  become: yes
+  apt:
+    name:
+      - lightdm-remote-session-x2go
+    state: present
+    install_recommends: yes

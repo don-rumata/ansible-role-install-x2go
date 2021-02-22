@@ -1,0 +1,11 @@
+---
+- name: Install {{ x2go_default_window_manager }} 4 Debian\Ubuntu
+  when:
+    - ansible_os_family == 'Debian'
+    - ansible_pkg_mgr == 'apt'
+  become: yes
+  apt:
+    name:
+      - '{{ x2go_default_window_manager }}'
+    state: present
+    install_recommends: yes

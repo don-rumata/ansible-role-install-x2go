@@ -1,0 +1,8 @@
+# https://andreyex.ru/operacionnaya-sistema-linux/kak-redaktirovat-fajl-sudoers-na-ubuntu-i-centos/
+# ALL ALL=(ALL) NOPASSWD: /sbin/mount.cifs, /bin/umount
+# Всё что ниже - синтаксический сахар на то, что выше.
+User_Alias GROUP_MOUNT_CIFS_WITHOUT_PASSWORD = ALL
+
+Cmnd_Alias MOUNT_SMB_SHARE = /sbin/mount.cifs, /bin/umount
+
+GROUP_MOUNT_CIFS_WITHOUT_PASSWORD ALL=(ALL) NOPASSWD: MOUNT_SMB_SHARE

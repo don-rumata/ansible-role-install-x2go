@@ -1,0 +1,28 @@
+---
+- name: Install CIFS mount support 4 Linux
+  when:
+    - ansible_system == 'Linux'
+    - x2go_mount_cifs_support == true
+  become: yes
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - cifs-utils
+    # # TODO. Протестить. Возможно нужен для прозрачного монтирования через kerberos.
+    # - keyutils
+
+- name: Config sudoers 4 allow execute mount.cifs from unprivileged users
+  when:
+    - ansible_system == 'Linux'
+    - x2go_mount_cifs_support == true
+    - x2go_mount_cifs_unprivileged_user == true
+  become: yes
+  template:
+    src: 10-mount-cifs.j2
+    dest: /etc/sudoers.d/10-mount-cifs
+    owner: root
+    group: root
+    mode: '400'
+    backup: yes
+    validate: 'visudo -cf %s'

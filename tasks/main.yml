@@ -1,0 +1,31 @@
+---
+- import_tasks: get-x2go-version-and-set-facts.yml
+
+- import_tasks: add-repo.yml
+  when:
+    - ansible_system == 'Linux'
+
+# TODO. Добавить sddm, gdm, xdm.
+- import_tasks: install-display-manager.yml
+  when:
+    - ansible_system == 'Linux'
+    - x2go_component == 'server'
+    - x2go_install_display_manager == true
+
+- import_tasks: install-window-manager.yml
+  when:
+    - ansible_system == 'Linux'
+    - x2go_component == 'server'
+    - x2go_install_window_manager == true
+
+- import_tasks: install-x2go-{{ x2go_component }}.yml
+
+- import_tasks: printer-support-over-{{ x2go_printer_support_backend }}.yml
+  when:
+    - x2go_component == 'client'
+    - x2go_printer_support == true
+
+- import_tasks: install-mount-cifs-support.yml
+  when:
+    - ansible_system == 'Linux'
+    - x2go_component == 'server'

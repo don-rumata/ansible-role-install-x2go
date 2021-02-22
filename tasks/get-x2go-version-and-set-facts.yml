@@ -1,0 +1,16 @@
+---
+# https://wiki.x2go.org/doku.php/wiki:repositories:debian
+# https://wiki.x2go.org/doku.php/wiki:repositories:epel
+# https://wiki.x2go.org/doku.php/wiki:repositories:suse
+- name: X2Go repo version set fact
+  when: ansible_system == 'Linux'
+  block:
+    - set_fact:
+        x2go_repo_version_fact: main
+      when: x2go_repo_version == 'release'
+    - set_fact:
+        x2go_repo_version_fact: saimaa
+      when: x2go_repo_version == 'esr'
+    - set_fact:
+        x2go_repo_version_fact: heuler
+      when: x2go_repo_version == 'nightly'

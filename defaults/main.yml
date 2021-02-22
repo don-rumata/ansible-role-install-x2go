@@ -1,0 +1,86 @@
+---
+#--- Version section ---#
+
+x2go_repo_version: release
+# x2go_repo_version: nightly
+# x2go_repo_version: esr
+
+#--- Component section ---#
+
+x2go_component: client
+# x2go_component: server
+# x2go_component: broker
+
+x2go_client_win_setup_url: https://code.x2go.org/releases/X2GoClient_latest_mswin32-setup.exe
+
+#--- Display manager section ---#
+
+x2go_install_display_manager: true
+# x2go_install_display_manager: false
+
+x2go_default_display_manager: lightdm
+# https://en.wikipedia.org/wiki/Template:Display_Managers
+# TODO. TEST!!!
+# Yes, yes, YAGNI, i know.
+# x2go_default_display_manager: gdm3
+# x2go_default_display_manager: sddm
+# x2go_default_display_manager: slim
+# x2go_default_display_manager: xdm
+# x2go_default_display_manager: lxdm
+
+#--- Window manager section ---#
+
+x2go_install_window_manager: true
+# x2go_install_window_manager: false
+
+x2go_default_window_manager: icewm
+# https://en.wikipedia.org/wiki/Template:Desktop_environments_and_window_managers_for_X11_and_Wayland
+# TODO. TEST!!!
+# Yes, yes, YAGNI, i know.
+# x2go_default_window_manager: mate
+# x2go_default_window_manager: lxde
+# x2go_default_window_manager: lxqt
+# x2go_default_window_manager: xfce4
+# x2go_default_window_manager: cinnamon
+# x2go_default_window_manager: kwin
+# x2go_default_window_manager: metacity
+# x2go_default_window_manager: compiz
+# x2go_default_window_manager: fvwm
+
+#--- Printer section ---#
+
+# https://stackoverflow.com/a/47994723
+
+x2go_printer_support: true
+# x2go_printer_support: false
+
+# https://askubuntu.com/q/345083/457538
+x2go_printer_disable_automatic_remote_installation: true
+
+# http://www.columbia.edu/~em36/pdftoprinter.html
+x2go_printer_support_backend: pdftoprinter
+# TODO
+# x2go_printer_support_backend: adobe-reader
+
+x2go_printer_support_backend_download_url: http://www.columbia.edu/~em36/PDFtoPrinter.exe
+
+#--- CIFS section ---#
+
+# For mount CIFS shares from x2go server.
+# https://unix.stackexchange.com/a/34793
+
+x2go_mount_cifs_support: true
+# x2go_mount_cifs_support: false
+
+x2go_mount_cifs_unprivileged_user: true
+# x2go_mount_cifs_unprivileged_user: false
+
+#--- Repo section ---#
+
+x2go_repo_deb_key: https://packages.x2go.org/pub.key
+
+x2go_repo_rpm_key: https://packages.x2go.org/pub.key
+
+# If you *NOT* use apt-cacher-ng or other caching proxy - select "https".
+http_or_https: http
+# http_or_https: https

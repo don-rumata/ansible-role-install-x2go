@@ -1,0 +1,105 @@
+---
+# https://wiki.x2go.org/doku.php/doc:installation:x2goserver
+- name: Add repo 4 Debian, but not for Ubuntu
+  when:
+    - ansible_os_family == 'Debian'
+    - ansible_distribution != 'Ubuntu'
+    - ansible_pkg_mgr == 'apt'
+  become: yes
+  block:
+    - apt_key:
+        url: '{{ x2go_repo_deb_key }}'
+        state: present
+    - apt_repository:
+        repo: deb {{ http_or_https }}://packages.x2go.org/debian {{ ansible_distribution_release }} extras {{ x2go_repo_version_fact }}
+        filename: x2go
+        mode: 644
+        state: present
+  tags:
+    - linux
+    - debian
+    - deb
+    - x2go
+    - remoteapp
+
+# https://launchpad.net/~x2go/+archive/ubuntu/stable
+# https://launchpad.net/~x2go/+archive/ubuntu/ppa
+# https://launchpad.net/~x2go/+archive/ubuntu/saimaa
+- name: Add repo x2go 4 Ubuntu
+  when:
+    - ansible_os_family == 'Debian'
+    - ansible_distribution == 'Ubuntu'
+    - ansible_pkg_mgr == 'apt'
+  become: yes
+  block:
+    - apt_repository:
+        repo: ppa:x2go/stable
+        mode: 644
+        state: present
+      when: x2go_repo_version == 'release'
+    - apt_repository:
+        repo: ppa:x2go/ppa
+        mode: 644
+        state: present
+      when: x2go_repo_version == 'nightly'
+    - apt_repository:
+        repo: ppa:x2go/saimaa
+        mode: 644
+        state: present
+      when: x2go_repo_version == 'esr'
+  tags:
+    - linux
+    - ubuntu
+    - deb
+    - x2go
+    - remoteapp
+
+# [x2go-release-epel]
+# name=Upstream X2Go EPEL Packages (Release Builds)
+# baseurl=http://packages.x2go.org/epel/$releasever/main/$basearch
+# gpgcheck=1
+# gpgkey=http://packages.x2go.org/pub.key
+# enabled=1
+# protect=0
+- name: Add repo x2go 4 Fedora\CentOS\RHEL
+  when:
+    - ansible_os_family == 'RedHat'
+  become: yes
+  yum_repository:
+    file: x2go
+    name: x2go-{{ x2go_repo_version }}-epel
+    description: Upstream X2Go EPEL Packages ({{ x2go_repo_version_fact }} Builds)
+    baseurl: '{{ http_or_https }}://packages.x2go.org/epel/$releasever/{{ x2go_repo_version_fact }}/$basearch'
+    gpgkey: '{{ x2go_repo_rpm_key }}'
+    enabled: yes
+    gpgcheck: yes
+    state: present
+  tags:
+    - linux
+    - centos
+    - rhel
+    - rpm
+    - x2go
+    - remoteapp
+
+# # TODO
+# # https://wiki.x2go.org/doku.php/wiki:repositories:suse
+# - name: Add repo x2go 4 OpenSUSE
+#   when:
+#     - ansible_system == 'Linux'
+#     - ansible_os_family == 'Suse'
+#     - ansible_pkg_mgr == 'zypper'
+#   become: yes
+#   zypper_repository:
+#     name: 'x2go Repository'
+#     repo: '{{ http_or_https }}://'
+#     state: present
+#     auto_import_keys: yes
+#     runrefresh: yes
+#   tags:
+#     - linux
+#     - suse
+#     - opensuse
+#     - rpm
+#     - x2go
+#     - remoteapp

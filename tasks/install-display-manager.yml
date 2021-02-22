@@ -1,0 +1,25 @@
+---
+# debconf-get-selections | grep lightdm
+# lightdm shared/default-x-display-manager        select  lightdm
+- name: Config default x display manager {{ x2go_default_display_manager }} 4 Debian\Ubuntu
+  when:
+    - ansible_os_family == 'Debian'
+    - ansible_pkg_mgr == 'apt'
+    - x2go_default_display_manager == 'lightdm'
+  become: yes
+  debconf:
+    name: lightdm
+    question: shared/default-x-display-manager
+    vtype: select
+    value: '{{ x2go_default_display_manager }}'
+
+- name: Install {{ x2go_default_display_manager }} 4 Debian\Ubuntu
+  when:
+    - ansible_os_family == 'Debian'
+    - ansible_pkg_mgr == 'apt'
+  become: yes
+  apt:
+    name:
+      - '{{ x2go_default_display_manager }}'
+    state: present
+    install_recommends: yes

@@ -1,0 +1,50 @@
+---
+# https://wiki.x2go.org/doku.php/doc:installation:x2goclient
+- name: Install X2Go {{ x2go_component }} 4 Linux
+  when: ansible_system == 'Linux'
+  become: yes
+  package:
+    name:
+      - x2goclient
+    state: present
+
+# TODO. https://docs.ansible.com/ansible/latest/modules/win_file_version_module.html https://stackoverflow.com/a/30708
+- name: Install X2Go {{ x2go_component }} 4 Windows
+  when:
+    - ansible_os_family == 'Windows'
+    - ansible_env.PROCESSOR_ARCHITECTURE == 'AMD64'
+  become: yes
+  become_method: runas
+  become_flags: logon_type=new_credentials logon_flags=netcredentials_only
+  win_package:
+    path: '{{ x2go_client_win_setup_url }}'
+    # product_id: 'X2Go Client for Windows'
+    creates_path: '%ProgramFiles(x86)%\x2goclient\x2goclient.exe'
+    # creates_version: '4.1.2.2-2020.02.13'
+    arguments:
+      - /S
+
+- name: Config X2Go {{ x2go_component }} firewall 4 Windows
+  when:
+    - ansible_os_family == 'Windows'
+    - ansible_env.PROCESSOR_ARCHITECTURE == 'AMD64'
+  become: yes
+  become_method: runas
+  become_flags: logon_type=new_credentials logon_flags=netcredentials_only
+  win_shell: "{{ item }}"
+  with_items:
+    - netsh advfirewall firewall add rule name="Allow Pulseaudio from x2go" dir=in action=allow program="C:\program files (x86)\x2goclient\pulse\pulseaudio.exe"
+    - netsh advfirewall firewall add rule name="Allow sshd from x2go" dir=in action=allow program="C:\program files (x86)\x2goclient\sshd.exe"
+    - netsh advfirewall firewall add rule name="Allow vcxsrv from x2go" dir=in action=allow program="C:\program files (x86)\x2goclient\vcxsrv\vcxsrv.exe"
+  changed_when: false
+
+- name: Config X2Go {{ x2go_component }} %PATH% 4 Windows
+  when:
+    - ansible_os_family == 'Windows'
+    - ansible_env.PROCESSOR_ARCHITECTURE == 'AMD64'
+  become: yes
+  become_method: runas
+  become_flags: logon_type=new_credentials logon_flags=netcredentials_only
+  win_path:
+    elements: 'C:\Program Files (x86)\x2goclient'
+    state: present

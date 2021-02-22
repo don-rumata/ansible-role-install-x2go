@@ -1,0 +1,31 @@
+---
+# https://stackoverflow.com/a/47994723
+# http://www.columbia.edu/~em36/pdftoprinter.html
+
+- name: Create directory structure 4 PDFtoPrinter 4 Windows
+  when: ansible_os_family == 'Windows'
+  become: yes
+  become_method: runas
+  become_flags: logon_type=new_credentials logon_flags=netcredentials_only
+  win_file:
+    path: '{{ ansible_env.ProgramFiles }}\pdftoprinter'
+    state: directory
+
+- name: Update %PATH% 4 PDFtoPrinter 4 Windows
+  when: ansible_os_family == 'Windows'
+  become: yes
+  become_method: runas
+  become_flags: logon_type=new_credentials logon_flags=netcredentials_only
+  win_path:
+    elements:
+      - '{{ ansible_env.ProgramFiles }}\pdftoprinter'
+    state: present
+
+- name: Install\Update PDFtoPrinter 4 Windows
+  when: ansible_os_family == 'Windows'
+  become: yes
+  become_method: runas
+  become_flags: logon_type=new_credentials logon_flags=netcredentials_only
+  win_get_url:
+    url: '{{ x2go_printer_support_backend_download_url }}'
+    dest: '{{ ansible_env.ProgramFiles }}\pdftoprinter\pdftoprinter.exe'
