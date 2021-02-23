@@ -2,7 +2,7 @@
 
 [![License][license-image]][license-url] [![Ansible Galaxy][ansible-galaxy-image]][ansible-galaxy-url]
 
-Install [X2GO](https://wiki.x2go.org/doku.php) client\server\brocker for Linux and Windows.
+Install [X2GO](https://wiki.x2go.org/doku.php) client\server\broker for Linux and Windows.
 
 ## Work on
 
@@ -213,7 +213,7 @@ Apache License, Version 2.0
 ## TODO
 
 - Add tests.
-- Add support config x2go brocker.
+- Add support config x2go broker.
 - Add support more display managers and windows managers.
 
 [license-image]: https://img.shields.io/github/license/don-rumata/ansible-role-install-x2go.svg
