@@ -5,10 +5,9 @@
   when: ansible_system == 'Linux'
   become: yes
   package:
-    name: "{{ item }}"
+    name:
+      - x2gobroker-daemon
+      - x2gobroker-wsgi
+      - x2gobroker-authservice
+      - x2gobroker-agent
     state: present
-  with_items:
-    - x2gobroker-daemon
-    - x2gobroker-wsgi
-    - x2gobroker-authservice
-    - x2gobroker-agent

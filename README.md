@@ -10,6 +10,9 @@ Install [X2GO](https://wiki.x2go.org/doku.php) client\server\broker for Linux an
 
 ```yaml
   platforms:
+    - name: Fedora
+      versions:
+        - 33
     - name: Ubuntu
       versions:
         - xenial
@@ -55,6 +58,7 @@ x2go_repo_version: release
 x2go_component: client
 # x2go_component: server
 # x2go_component: broker
+# x2go_component: x2godesktopsharing
 
 x2go_client_win_setup_url: https://code.x2go.org/releases/X2GoClient_latest_mswin32-setup.exe
 
@@ -99,10 +103,6 @@ x2go_mount_cifs_unprivileged_user: true
 # x2go_mount_cifs_unprivileged_user: false
 
 #--- Repo section ---#
-
-x2go_repo_deb_key: https://packages.x2go.org/pub.key
-
-x2go_repo_rpm_key: https://packages.x2go.org/pub.key
 
 # If you *NOT* use apt-cacher-ng or other caching proxy - select "https".
 http_or_https: http

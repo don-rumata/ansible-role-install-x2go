@@ -8,19 +8,17 @@
   become: yes
   block:
     - apt_key:
-        url: '{{ x2go_repo_deb_key }}'
+        url: https://packages.x2go.org/pub.key
+        state: present
+    - apt_key:
+        keyserver: keys.gnupg.net
+        id: E1F958385BFE2B6E
         state: present
     - apt_repository:
         repo: deb {{ http_or_https }}://packages.x2go.org/debian {{ ansible_distribution_release }} extras {{ x2go_repo_version_fact }}
         filename: x2go
         mode: 644
         state: present
-  tags:
-    - linux
-    - debian
-    - deb
-    - x2go
-    - remoteapp
 
 # https://launchpad.net/~x2go/+archive/ubuntu/stable
 # https://launchpad.net/~x2go/+archive/ubuntu/ppa
@@ -47,12 +45,32 @@
         mode: 644
         state: present
       when: x2go_repo_version == 'esr'
-  tags:
-    - linux
-    - ubuntu
-    - deb
-    - x2go
-    - remoteapp
+
+- name: Add EPEL repo 4 CentOS 7\RHEL
+  when:
+    - ansible_os_family == 'RedHat'
+    - ansible_pkg_mgr == 'yum'
+  vars:
+    # https://stackoverflow.com/a/47091066/5430535
+    # https://github.com/ansible/ansible/issues/32532#issuecomment-341641007
+    ansible_python_interpreter: /usr/bin/python2.7
+  become: yes
+  # https://fedoraproject.org/wiki/EPEL
+  package:
+    name:
+      - epel-release
+    state: present
+
+- name: Add EPEL repo 4 CentOS 8+\RHEL
+  when:
+    - ansible_os_family == 'RedHat'
+    - ansible_pkg_mgr == 'dnf'
+    - ansible_distribution != 'Fedora'
+  become: yes
+  package:
+    name:
+      - epel-release
+    state: present
 
 # [x2go-release-epel]
 # name=Upstream X2Go EPEL Packages (Release Builds)
@@ -61,45 +79,46 @@
 # gpgkey=http://packages.x2go.org/pub.key
 # enabled=1
 # protect=0
-- name: Add repo x2go 4 Fedora\CentOS\RHEL
+- name: Add repo x2go 4 CentOS\RHEL
   when:
     - ansible_os_family == 'RedHat'
+    - ansible_distribution_major_version != '8'
   become: yes
   yum_repository:
     file: x2go
     name: x2go-{{ x2go_repo_version }}-epel
     description: Upstream X2Go EPEL Packages ({{ x2go_repo_version_fact }} Builds)
     baseurl: '{{ http_or_https }}://packages.x2go.org/epel/$releasever/{{ x2go_repo_version_fact }}/$basearch'
-    gpgkey: '{{ x2go_repo_rpm_key }}'
+    gpgkey: https://packages.x2go.org/pub.key
     enabled: yes
     gpgcheck: yes
     state: present
-  tags:
-    - linux
-    - centos
-    - rhel
-    - rpm
-    - x2go
-    - remoteapp
 
-# # TODO
-# # https://wiki.x2go.org/doku.php/wiki:repositories:suse
-# - name: Add repo x2go 4 OpenSUSE
-#   when:
-#     - ansible_system == 'Linux'
-#     - ansible_os_family == 'Suse'
-#     - ansible_pkg_mgr == 'zypper'
-#   become: yes
-#   zypper_repository:
-#     name: 'x2go Repository'
-#     repo: '{{ http_or_https }}://'
-#     state: present
-#     auto_import_keys: yes
-#     runrefresh: yes
-#   tags:
-#     - linux
-#     - suse
-#     - opensuse
-#     - rpm
-#     - x2go
-#     - remoteapp
+# https://wiki.x2go.org/doku.php/wiki:repositories:suse
+- name: Add repo x2go 4 {{ ansible_distribution }}
+  when:
+    - ansible_system == 'Linux'
+    - ansible_os_family == 'Suse'
+    - ansible_pkg_mgr == 'zypper'
+    - ansible_distribution == 'openSUSE Leap'
+  become: yes
+  zypper_repository:
+    name: 'x2go Repository'
+    repo: '{{ http_or_https }}://download.opensuse.org/repositories/X11:/RemoteDesktop:/x2go/{{ ansible_distribution | replace(" ", "_") }}_{{ ansible_distribution_version }}/'
+    state: present
+    auto_import_keys: yes
+    runrefresh: yes
+
+- name: Add repo x2go 4 {{ ansible_distribution }}
+  when:
+    - ansible_system == 'Linux'
+    - ansible_os_family == 'Suse'
+    - ansible_pkg_mgr == 'zypper'
+    - ansible_distribution == 'openSUSE Tumbleweed'
+  become: yes
+  zypper_repository:
+    name: 'x2go Repository'
+    repo: '{{ http_or_https }}://download.opensuse.org/repositories/X11:/RemoteDesktop:/x2go/{{ ansible_distribution | replace(" ", "_") }}/'
+    state: present
+    auto_import_keys: yes
+    runrefresh: yes
