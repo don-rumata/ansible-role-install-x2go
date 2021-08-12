@@ -17,7 +17,7 @@
     - apt_repository:
         repo: deb {{ http_or_https }}://packages.x2go.org/debian {{ ansible_distribution_release }} extras {{ x2go_repo_version_fact }}
         filename: x2go
-        mode: 644
+        mode: '644'
         state: present
 
 # https://launchpad.net/~x2go/+archive/ubuntu/stable
@@ -32,17 +32,17 @@
   block:
     - apt_repository:
         repo: ppa:x2go/stable
-        mode: 644
+        mode: '644'
         state: present
       when: x2go_repo_version == 'release'
     - apt_repository:
         repo: ppa:x2go/ppa
-        mode: 644
+        mode: '644'
         state: present
       when: x2go_repo_version == 'nightly'
     - apt_repository:
         repo: ppa:x2go/saimaa
-        mode: 644
+        mode: '644'
         state: present
       when: x2go_repo_version == 'esr'
 
