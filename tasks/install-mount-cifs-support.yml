@@ -4,7 +4,7 @@
     - ansible_system == 'Linux'
     # - x2go_mount_cifs_support == true
     - x2go_mount_cifs_support
-  become: yes
+  become: true
   package:
     name: "{{ item }}"
     state: present
@@ -20,12 +20,12 @@
     # - x2go_mount_cifs_unprivileged_user == true
     - x2go_mount_cifs_support
     - x2go_mount_cifs_unprivileged_user
-  become: yes
+  become: true
   template:
     src: 10-mount-cifs.j2
     dest: /etc/sudoers.d/10-mount-cifs
     owner: root
     group: root
     mode: '400'
-    backup: yes
+    backup: true
     validate: 'visudo -cf %s'

@@ -1,18 +1,20 @@
 ---
 # https://wiki.x2go.org/doku.php/doc:installation:x2goserver
+# https://wiki.x2go.org/doku.php/wiki:repositories:debian
 - name: Add repo 4 Debian, but not for Ubuntu
   when:
     - ansible_os_family == 'Debian'
     - ansible_distribution != 'Ubuntu'
     - ansible_pkg_mgr == 'apt'
-  become: yes
+  become: true
   block:
     - apt_key:
         url: https://packages.x2go.org/pub.key
         state: present
     - apt_key:
-        keyserver: keys.gnupg.net
+        keyserver: keyserver.ubuntu.com
         id: E1F958385BFE2B6E
+        # url: https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x972fd88fa0bafb578d0476dfe1f958385bfe2b6e
         state: present
     - apt_repository:
         repo: deb {{ http_or_https }}://packages.x2go.org/debian {{ ansible_distribution_release }} extras {{ x2go_repo_version_fact }}
@@ -28,7 +30,7 @@
     - ansible_os_family == 'Debian'
     - ansible_distribution == 'Ubuntu'
     - ansible_pkg_mgr == 'apt'
-  become: yes
+  become: true
   block:
     - apt_repository:
         repo: ppa:x2go/stable
@@ -54,7 +56,7 @@
     # https://stackoverflow.com/a/47091066/5430535
     # https://github.com/ansible/ansible/issues/32532#issuecomment-341641007
     ansible_python_interpreter: /usr/bin/python2.7
-  become: yes
+  become: true
   # https://fedoraproject.org/wiki/EPEL
   package:
     name:
@@ -66,7 +68,7 @@
     - ansible_os_family == 'RedHat'
     - ansible_pkg_mgr == 'dnf'
     - ansible_distribution != 'Fedora'
-  become: yes
+  become: true
   package:
     name:
       - epel-release
@@ -83,15 +85,15 @@
   when:
     - ansible_os_family == 'RedHat'
     - ansible_distribution_major_version != '8'
-  become: yes
+  become: true
   yum_repository:
     file: x2go
     name: x2go-{{ x2go_repo_version }}-epel
     description: Upstream X2Go EPEL Packages ({{ x2go_repo_version_fact }} Builds)
     baseurl: '{{ http_or_https }}://packages.x2go.org/epel/$releasever/{{ x2go_repo_version_fact }}/$basearch'
     gpgkey: https://packages.x2go.org/pub.key
-    enabled: yes
-    gpgcheck: yes
+    enabled: true
+    gpgcheck: true
     state: present
 
 # https://wiki.x2go.org/doku.php/wiki:repositories:suse
@@ -101,13 +103,13 @@
     - ansible_os_family == 'Suse'
     - ansible_pkg_mgr == 'zypper'
     - ansible_distribution == 'openSUSE Leap'
-  become: yes
+  become: true
   zypper_repository:
     name: 'x2go Repository'
     repo: '{{ http_or_https }}://download.opensuse.org/repositories/X11:/RemoteDesktop:/x2go/{{ ansible_distribution | replace(" ", "_") }}_{{ ansible_distribution_version }}/'
     state: present
-    auto_import_keys: yes
-    runrefresh: yes
+    auto_import_keys: true
+    runrefresh: true
 
 - name: Add repo x2go 4 {{ ansible_distribution }}
   when:
@@ -115,10 +117,10 @@
     - ansible_os_family == 'Suse'
     - ansible_pkg_mgr == 'zypper'
     - ansible_distribution == 'openSUSE Tumbleweed'
-  become: yes
+  become: true
   zypper_repository:
     name: 'x2go Repository'
     repo: '{{ http_or_https }}://download.opensuse.org/repositories/X11:/RemoteDesktop:/x2go/{{ ansible_distribution | replace(" ", "_") }}/'
     state: present
-    auto_import_keys: yes
-    runrefresh: yes
+    auto_import_keys: true
+    runrefresh: true

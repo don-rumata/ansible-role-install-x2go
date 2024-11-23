@@ -3,9 +3,9 @@
   when:
     - ansible_os_family == 'Debian'
     - ansible_pkg_mgr == 'apt'
-  become: yes
+  become: true
   apt:
     name:
       - '{{ x2go_default_window_manager }}'
     state: present
-    install_recommends: yes
+    install_recommends: true

@@ -4,7 +4,7 @@
 
 - name: Create directory structure 4 PDFtoPrinter 4 Windows
   when: ansible_os_family == 'Windows'
-  become: yes
+  become: true
   become_method: runas
   become_flags: logon_type=new_credentials logon_flags=netcredentials_only
   win_file:
@@ -13,7 +13,7 @@
 
 - name: Update %PATH% 4 PDFtoPrinter 4 Windows
   when: ansible_os_family == 'Windows'
-  become: yes
+  become: true
   become_method: runas
   become_flags: logon_type=new_credentials logon_flags=netcredentials_only
   win_path:
@@ -23,7 +23,7 @@
 
 - name: Install\Update PDFtoPrinter 4 Windows
   when: ansible_os_family == 'Windows'
-  become: yes
+  become: true
   become_method: runas
   become_flags: logon_type=new_credentials logon_flags=netcredentials_only
   win_get_url:

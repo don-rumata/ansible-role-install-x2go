@@ -2,7 +2,7 @@
 # https://wiki.x2go.org/doku.php/doc:installation:x2goserver
 - name: Install X2Go {{ x2go_component }} 4 Linux
   when: ansible_system == 'Linux'
-  become: yes
+  become: true
   package:
     name: "{{ item }}"
     state: present
@@ -16,7 +16,7 @@
     - ansible_system == 'Linux'
     # - x2go_printer_support == true
     - x2go_printer_support
-  become: yes
+  become: true
   package:
     name: "{{ item }}"
     state: present
@@ -33,11 +33,11 @@
     # - x2go_printer_disable_automatic_remote_installation == true
     - x2go_printer_support
     - x2go_printer_disable_automatic_remote_installation
-  become: yes
+  become: true
   service:
     name: cups-browsed
     state: stopped
-    enabled: no
+    enabled: false
 
 - name: Enable automatic remote printer installation
   when:
@@ -46,18 +46,18 @@
     # - x2go_printer_disable_automatic_remote_installation == false
     - x2go_printer_support
     - not x2go_printer_disable_automatic_remote_installation
-  become: yes
+  become: true
   service:
     name: cups-browsed
     state: started
-    enabled: yes
+    enabled: true
 
 - name: Install X2Go {{ x2go_component }} and support mount windows shares 4 Linux
   when:
     - ansible_system == 'Linux'
     # - x2go_mount_cifs_support == true
     - x2go_mount_cifs_support
-  become: yes
+  become: true
   package:
     name: "{{ item }}"
     state: present
@@ -69,11 +69,11 @@
 
 - name: Start X2Go {{ x2go_component }} service 4 Linux
   when: ansible_system == 'Linux'
-  become: yes
+  become: true
   service:
     name: x2goserver
     state: started
-    enabled: yes
+    enabled: true
 
 # # https://launchpad.net/~x2go/+archive/ubuntu/stable?field.series_filter=bionic
 # sudo apt-get install x2gomatebindings # if you use MATE/mubuntu
@@ -93,12 +93,12 @@
   vars:
     # mate_package_for_check: mate-desktop-common
     mate_package_for_check: mate-desktop-environment
-  become: yes
+  become: true
   apt:
     name:
       - x2gomatebindings
     state: present
-    install_recommends: yes
+    install_recommends: true
 
 - name: Install x2golxdebindings 4 Debian\Ubuntu
   when:
@@ -108,21 +108,21 @@
     - "lxde_package_for_check in ansible_facts.packages"
   vars:
     lxde_package_for_check: lxde-core
-  become: yes
+  become: true
   apt:
     name:
       - x2golxdebindings
     state: present
-    install_recommends: yes
+    install_recommends: true
 
 - name: Install lightdm-remote-session-x2go 4 Debian\Ubuntu
   when:
     - ansible_os_family == 'Debian'
     - ansible_pkg_mgr == 'apt'
     - "'lightdm' in ansible_facts.packages"
-  become: yes
+  become: true
   apt:
     name:
       - lightdm-remote-session-x2go
     state: present
-    install_recommends: yes
+    install_recommends: true

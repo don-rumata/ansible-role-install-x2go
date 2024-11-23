@@ -1,6 +1,6 @@
 ---
 - name: restart-cups
-  become: yes
+  become: true
   service:
     name: cups
     state: restarted

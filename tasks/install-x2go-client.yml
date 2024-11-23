@@ -2,7 +2,7 @@
 # https://wiki.x2go.org/doku.php/doc:installation:x2goclient
 - name: Install X2Go {{ x2go_component }} 4 Linux
   when: ansible_system == 'Linux'
-  become: yes
+  become: true
   package:
     name:
       - x2goclient
@@ -13,7 +13,7 @@
   when:
     - ansible_os_family == 'Windows'
     - ansible_env.PROCESSOR_ARCHITECTURE == 'AMD64'
-  become: yes
+  become: true
   become_method: runas
   become_flags: logon_type=new_credentials logon_flags=netcredentials_only
   win_package:
@@ -28,7 +28,7 @@
   when:
     - ansible_os_family == 'Windows'
     - ansible_env.PROCESSOR_ARCHITECTURE == 'AMD64'
-  become: yes
+  become: true
   become_method: runas
   become_flags: logon_type=new_credentials logon_flags=netcredentials_only
   win_shell: "{{ item }}"
@@ -42,7 +42,7 @@
   when:
     - ansible_os_family == 'Windows'
     - ansible_env.PROCESSOR_ARCHITECTURE == 'AMD64'
-  become: yes
+  become: true
   become_method: runas
   become_flags: logon_type=new_credentials logon_flags=netcredentials_only
   win_path:

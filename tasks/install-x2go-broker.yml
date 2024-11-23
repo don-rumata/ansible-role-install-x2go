@@ -3,7 +3,7 @@
 # TODO. Почитать по-внимательнее, надо ли ставить все эти компоненты или они опциональны.
 - name: Install X2Go {{ x2go_component }} 4 Linux
   when: ansible_system == 'Linux'
-  become: yes
+  become: true
   package:
     name:
       - x2gobroker-daemon
